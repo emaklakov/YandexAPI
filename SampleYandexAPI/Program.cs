@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using YandexAPI;
@@ -60,6 +61,18 @@ namespace SampleYandexAPI
             //Console.ReadLine();
 
             #endregion Get Point
+
+            #region Download Map Image
+
+            //YandexAPI.Maps.GeoCode geoCode = new GeoCode();
+
+            //string ResultSearchObject = geoCode.SearchObject( "Алматы, ул.Айтиева, 42" );
+            //string ImageUrl = geoCode.GetUrlMapImage( ResultSearchObject, 16, 650, 450 );
+            //Image result = geoCode.DownloadMapImage(ImageUrl);
+
+            //Console.WriteLine("OK");
+
+            #endregion
         }
     }
 }

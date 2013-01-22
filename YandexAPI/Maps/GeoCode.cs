@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using System.Net.Mime;
 using System.Text;
 using System.Xml;
 
@@ -75,6 +77,43 @@ namespace YandexAPI.Maps
             }
 
             return point;
+        }
+
+        /// <summary>
+        /// Метод для скачивания Image из интернета
+        /// </summary>
+        /// <param name="URL">URL скачиваемой Image</param>
+        /// <returns>Возвращаем объект Image</returns>
+        public Image DownloadMapImage( string Url )
+        {
+            Image tmpImage = null;
+
+            // Open a connection
+            System.Net.HttpWebRequest HttpWebRequest = (System.Net.HttpWebRequest)System.Net.HttpWebRequest.Create( Url );
+
+            HttpWebRequest.AllowWriteStreamBuffering = true;
+
+            // You can also specify additional header values like the user agent or the referer: (Optional)
+            HttpWebRequest.UserAgent = "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)";
+            HttpWebRequest.Referer = "http://www.google.com/";
+
+            // set timeout for 20 seconds (Optional)
+            HttpWebRequest.Timeout = 20000;
+
+            // Request response:
+            System.Net.WebResponse WebResponse = HttpWebRequest.GetResponse();
+
+            // Open data stream:
+            System.IO.Stream WebStream = WebResponse.GetResponseStream();
+
+            // convert webstream to image
+            tmpImage = Image.FromStream( WebStream );
+
+            // Cleanup
+            WebResponse.Close();
+            WebResponse.Close();
+
+            return tmpImage;
         }
     }
 }
