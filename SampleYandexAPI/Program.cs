@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using YandexAPI;
+using YandexAPI.Maps;
 
 namespace SampleYandexAPI
 {
@@ -11,14 +12,30 @@ namespace SampleYandexAPI
         static void Main( string[] args )
         {
             #region GET Request
-            string urlXml = "http://geocode-maps.yandex.ru/1.x/?geocode=" + "Алматы" + "&results=1";
 
-            YandexAPI.Request request = new YandexAPI.Request();
+            //string urlXml = "http://geocode-maps.yandex.ru/1.x/?geocode=" + "76.912335,43.280810" + "&results=1";
 
-            Console.WriteLine( request.GetResponseToString( request.GET( urlXml ) ) );
-            Console.ReadLine();
+            //YandexAPI.Request request = new YandexAPI.Request();
+
+            //string result = request.GetResponseToString(request.GET(urlXml));
+
+            //Console.WriteLine( result );
+            //Console.ReadLine();
 
             #endregion GET Request
+
+            #region Search Object
+
+            //YandexAPI.Maps.GeoCode geoCode = new GeoCode();
+
+            //string result = geoCode.SearchObject( "Алматы, ул.Айтиева, 42" ); // 76.904529 43.254999
+
+            //string result = geoCode.SearchObject( 76.904529, 43.254999 );
+            
+            //Console.WriteLine( result );
+            //Console.ReadLine();
+
+            #endregion Search Object
         }
     }
 }
