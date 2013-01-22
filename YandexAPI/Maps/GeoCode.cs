@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml;
 
 namespace YandexAPI.Maps
 {
@@ -32,6 +33,41 @@ namespace YandexAPI.Maps
             YandexAPI.Request request = new YandexAPI.Request();
             string result = request.GetResponseToString( request.GET( urlXml ) );
             return result;
+        }
+
+        /// <summary>
+        /// Возвращает URL на статичес рисунок карты
+        /// </summary>
+        /// <param name="ResultSearchObject">XML резудьтат поиска</param>
+        /// <param name="zPosition">Может быть от 1 до 17</param>
+        /// <param name="Width">Ширина. Может быть от 1 до 650</param>
+        /// <param name="Height">Высота. Может быть от 1 до 450</param>
+        /// <returns>Url на Image</returns>
+        public string GetUrlMapImage( string ResultSearchObject, int zPosition, int Width, int Height )
+        {
+            string point = "";
+
+            XmlDocument xd = new XmlDocument();
+            xd.LoadXml( ResultSearchObject );
+
+            XmlNode ymaps = xd.DocumentElement;
+
+            XmlNodeList GeoObjectTemp = xd.GetElementsByTagName( "GeoObject" );
+
+            foreach( XmlNode node in GeoObjectTemp )
+            {
+                foreach( XmlNode item in node.ChildNodes )
+                {
+                    if( item.Name == "Point" )
+                    {
+                        point = item.LastChild.InnerXml.Replace( ' ', ',' );
+                    }
+                }
+
+                break;
+            }
+
+            return String.Format( "http://static-maps.yandex.ru/1.x/?ll={0}&size={1},{2}&z={3}&l=map&pt={0},pm2lbm&lang=ru-RU", point, Width, Height, zPosition );
         }
     }
 }
