@@ -45,6 +45,13 @@ namespace YandexAPI.Maps
         /// <returns>Url на Image</returns>
         public string GetUrlMapImage( string ResultSearchObject, int zPosition, int Width, int Height )
         {
+            string point = GetPoint(ResultSearchObject);
+
+            return String.Format( "http://static-maps.yandex.ru/1.x/?ll={0}&size={1},{2}&z={3}&l=map&pt={0},pm2lbm&lang=ru-RU", point, Width, Height, zPosition );
+        }
+
+        public string GetPoint(string ResultSearchObject)
+        {
             string point = "";
 
             XmlDocument xd = new XmlDocument();
@@ -67,7 +74,7 @@ namespace YandexAPI.Maps
                 break;
             }
 
-            return String.Format( "http://static-maps.yandex.ru/1.x/?ll={0}&size={1},{2}&z={3}&l=map&pt={0},pm2lbm&lang=ru-RU", point, Width, Height, zPosition );
+            return point;
         }
     }
 }

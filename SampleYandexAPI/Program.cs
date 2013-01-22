@@ -48,6 +48,18 @@ namespace SampleYandexAPI
             //Console.ReadLine();
 
             #endregion Get Url Map Image
+
+            #region Get Point
+
+            //YandexAPI.Maps.GeoCode geoCode = new GeoCode();
+
+            //string ResultSearchObject = geoCode.SearchObject( "Алматы, ул.Айтиева, 42" );
+            //string result = geoCode.GetPoint(ResultSearchObject);
+
+            //Console.WriteLine( result );
+            //Console.ReadLine();
+
+            #endregion Get Point
         }
     }
 }
