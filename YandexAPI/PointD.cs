@@ -14,8 +14,8 @@ namespace YandexAPI
         public PointD(string Point)
         {
             string[] coordinate = Point.Split( new char[] { ',' } );
-            _x = Double.Parse( coordinate[0], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture );
-            _y = Double.Parse( coordinate[1], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture );
+            _x = Double.Parse( coordinate[0], new CultureInfo( "en-GB" ) );
+            _y = Double.Parse( coordinate[1], new CultureInfo( "en-GB" ) );
         }
 
         public PointD( double x, double y )

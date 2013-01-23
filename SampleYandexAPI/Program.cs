@@ -76,10 +76,11 @@ namespace SampleYandexAPI
 
             #region IsInPolygon
 
-            YandexAPI.Maps.GeoCode geoCode = new GeoCode();
+            //YandexAPI.Maps.GeoCode geoCode = new GeoCode();
 
-            string ResultSearchObject = geoCode.SearchObject( "Алматы, ул.Айтиева, 42" );
-            PointD MainPoint = geoCode.GetPointD( ResultSearchObject );
+            //string ResultSearchObject = geoCode.SearchObject( "Алматы, ул.Айтиева, 42" );
+            //PointD MainPoint = geoCode.GetPointD( ResultSearchObject );
+            //PointD MainPoint = new PointD( "76.9113710185236, 43.254288472262346" );
 
             //// False
             //PointD[] Points = new PointD[] { new PointD( 76.91874334111112, 43.25301084554285 ), 
@@ -120,9 +121,10 @@ namespace SampleYandexAPI
             //PointD[] Points = PolygonMap.GetPointsFromString(
             //        "76.90175091173897 43.25658413329047 76.91089188006175 43.2575251251192 76.91127811815986 43.25423158964632 76.91638504412424 43.25451389971651 76.91629921343578 43.25369833369539 76.9159988060261 43.252820019524655 76.91144977953685 43.25250633280052 76.90239464190255 43.25181621627961 76.90175091173897 43.25658413329047" );
 
-            //PolygonMap polygon = new PolygonMap( Points );
 
-            //bool result = polygon.IsInPolygon(MainPoint);
+            //PolygonMap polygon = new PolygonMap("1", Points );
+
+            //bool result = polygon.IsInPolygon( MainPoint );
 
             //Console.WriteLine( result.ToString() );
             //Console.ReadLine();

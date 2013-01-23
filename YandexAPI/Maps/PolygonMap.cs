@@ -8,15 +8,17 @@ namespace YandexAPI.Maps
 {
     public class PolygonMap
     {
+        private string _Id;
         private PointD[] _Points;
         
-        public PolygonMap()
+        public PolygonMap( string Id )
         {
-            
+            _Id = Id;
         }
 
-        public PolygonMap( PointD[] Points )
+        public PolygonMap( string Id, PointD[] Points )
         {
+            _Id = Id;
             _Points = Points;
         }
 
@@ -61,8 +63,8 @@ namespace YandexAPI.Maps
             for( int i = 0; i < coordinates.Length;  i = i+2 )
             {
                 PointD point = new PointD();
-                point.X = Double.Parse( coordinates[i], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture );
-                point.Y = Double.Parse( coordinates[i + 1], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture );
+                point.X = Double.Parse( coordinates[i], new CultureInfo( "en-GB" ) );
+                point.Y = Double.Parse( coordinates[i + 1], new CultureInfo( "en-GB" ) );
 
                 result[j] = point;
 
@@ -73,6 +75,28 @@ namespace YandexAPI.Maps
             }
 
             return result;
+        }
+
+        public string GetIdPolygonOwnerPoint( PolygonMap[] Polygons, PointD MainPoint )
+        {
+            foreach (var polygonMap in Polygons)
+            {
+                if( polygonMap.IsInPolygon( MainPoint ) )
+                {
+                    return polygonMap.Id;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Id полигона
+        /// </summary>
+        public string Id
+        {
+            get { return _Id; }
+            set { _Id = value; }
         }
 
         /// <summary>
