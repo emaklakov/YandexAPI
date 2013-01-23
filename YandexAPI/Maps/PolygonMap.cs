@@ -77,7 +77,13 @@ namespace YandexAPI.Maps
             return result;
         }
 
-        public string GetIdPolygonOwnerPoint( PolygonMap[] Polygons, PointD MainPoint )
+        /// <summary>
+        /// Возвращаем Id полигона, которому пренадлежит точка
+        /// </summary>
+        /// <param name="Polygons">Полигоны, которых нужно искать точку</param>
+        /// <param name="MainPoint">Точка для проверки</param>
+        /// <returns>Возвращает Id полигона</returns>
+        public static string GetIdPolygonOwnerPoint( PolygonMap[] Polygons, PointD MainPoint )
         {
             foreach (var polygonMap in Polygons)
             {
