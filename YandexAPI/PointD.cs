@@ -29,6 +29,24 @@ namespace YandexAPI
             
         }
 
+        /// <summary>
+        /// Возвращаем GPS координаты точки
+        /// </summary>
+        /// <param name="Point">Точка с координатами Яндекса</param>
+        /// <returns>GPS координаты</returns>
+        public static PointD ConvertToGPSPoint( PointD Point )
+        {
+            PointD result = new PointD();
+
+            double integerX = Math.Truncate(Point.X);
+            result.X = integerX + ( Point.X - integerX ) * 0.6;
+
+            double integerY = Math.Truncate( Point.Y );
+            result.Y = integerY + ( Point.Y - integerY ) * 0.6;
+
+            return result;
+        }
+
         public double X
         {
             get { return _x; }

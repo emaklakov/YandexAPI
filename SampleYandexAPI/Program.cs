@@ -171,6 +171,17 @@ namespace SampleYandexAPI
             //Console.ReadLine();
 
             #endregion GetIdPolygonOwnerPoint
+
+            #region ConvertToGPSPoint
+
+            //YandexAPI.Maps.GeoCode geoCode = new GeoCode();
+
+            //string ResultSearchObject = geoCode.SearchObject( "Алматы, ул.Айтиева, 42" );
+            //PointD MainPoint = geoCode.GetPointD( ResultSearchObject );
+
+            //PointD pointGPS = PointD.ConvertToGPSPoint(MainPoint);
+
+            #endregion ConvertToGPSPoint
         }
     }
 }
