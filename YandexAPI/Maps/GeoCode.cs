@@ -52,7 +52,7 @@ namespace YandexAPI.Maps
             return String.Format( "http://static-maps.yandex.ru/1.x/?ll={0}&size={1},{2}&z={3}&l=map&pt={0},pm2lbm&lang=ru-RU", point, Width, Height, zPosition );
         }
 
-        public string GetPoint(string ResultSearchObject)
+        public string GetPoint( string ResultSearchObject )
         {
             string point = "";
 
@@ -77,6 +77,12 @@ namespace YandexAPI.Maps
             }
 
             return point;
+        }
+
+        public PointD GetPointD( string ResultSearchObject )
+        {
+            PointD result = new PointD( GetPoint( ResultSearchObject ) );
+            return result;
         }
 
         /// <summary>

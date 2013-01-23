@@ -41,6 +41,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Maps\GeoCode.cs" />
+    <Compile Include="Maps\PolygonMap.cs" />
+    <Compile Include="PointD.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Request.cs" />
   </ItemGroup>
