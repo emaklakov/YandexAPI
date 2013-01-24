@@ -182,6 +182,16 @@ namespace SampleYandexAPI
             //PointD pointGPS = PointD.ConvertToGPSPoint(MainPoint);
 
             #endregion ConvertToGPSPoint
+
+            #region ConvertGPSToYandexPoint
+
+            PointD MainPoint = new PointD(77.333, 43.927);
+
+            PointD pointYandex = PointD.ConvertGPSToYandexPoint( MainPoint );
+
+            string result = String.Format("{0}, {1}", pointYandex.X, pointYandex.Y);
+
+            #endregion ConvertGPSToYandexPoint
         }
     }
 }

@@ -38,7 +38,7 @@ namespace YandexAPI.Maps
         }
 
         /// <summary>
-        /// Возвращает URL на статичес рисунок карты
+        /// Возвращает URL на статический рисунок карты с точкой поиска в центре
         /// </summary>
         /// <param name="ResultSearchObject">XML резудьтат поиска</param>
         /// <param name="zPosition">Может быть от 1 до 17</param>
