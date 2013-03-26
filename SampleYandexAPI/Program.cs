@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Net;
 using System.Text;
 using YandexAPI;
 using YandexAPI.Maps;
@@ -14,11 +15,17 @@ namespace SampleYandexAPI
         {
             #region GET Request
 
-            //string urlXml = "http://geocode-maps.yandex.ru/1.x/?geocode=" + "76.912335,43.280810" + "&results=1";
+            string urlXml = "http://geocode-maps.yandex.ru/1.x/?geocode=" + "76.912335,43.280810" + "&results=1";
 
-            //YandexAPI.Request request = new YandexAPI.Request();
+            YandexAPI.Request request = new YandexAPI.Request();
+            //79.134.7.86:3128
 
-            //string result = request.GetResponseToString(request.GET(urlXml));
+            //string result = request.GetResponseToString( request.GET( urlXml ) );
+
+            //Use Proxy
+            //var Proxy = new WebProxy( "199.91.172.25", 3128 );
+            //Proxy.Credentials = CredentialCache.DefaultCredentials; //Получаем системные учетные данные
+            //string result = request.GetResponseToString( request.GET( urlXml, Proxy ) );
 
             //Console.WriteLine( result );
             //Console.ReadLine();
@@ -69,6 +76,11 @@ namespace SampleYandexAPI
             //string ResultSearchObject = geoCode.SearchObject( "Алматы, ул.Айтиева, 42" );
             //string ImageUrl = geoCode.GetUrlMapImage( ResultSearchObject, 16, 650, 450 );
             //Image result = geoCode.DownloadMapImage(ImageUrl);
+
+            ////Use Proxy
+            //var Proxy = new WebProxy("localhost", 8080);
+            //Proxy.Credentials = CredentialCache.DefaultCredentials; //Получаем системные учетные данные
+            //Image result = geoCode.DownloadMapImage(ImageUrl, Proxy);
 
             //Console.WriteLine("OK");
 
@@ -185,11 +197,11 @@ namespace SampleYandexAPI
 
             #region ConvertGPSToYandexPoint
 
-            PointD MainPoint = new PointD(77.333, 43.927);
+            //PointD MainPoint = new PointD(77.333, 43.927);
 
-            PointD pointYandex = PointD.ConvertGPSToYandexPoint( MainPoint );
+            //PointD pointYandex = PointD.ConvertGPSToYandexPoint( MainPoint );
 
-            string result = String.Format("{0}, {1}", pointYandex.X, pointYandex.Y);
+            //string result = String.Format("{0}, {1}", pointYandex.X, pointYandex.Y);
 
             #endregion ConvertGPSToYandexPoint
         }

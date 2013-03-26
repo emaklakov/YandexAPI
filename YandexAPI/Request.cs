@@ -20,9 +20,21 @@ namespace YandexAPI
             return responseStream;
         }
 
+        public Stream POST( string Url, string Command, WebProxy Proxy )
+        {
+            responseStream = ResponseStreamPOST( Url, Command, Proxy );
+            return responseStream;
+        }
+
         public Stream GET( string Url )
         {
             responseStream = ResponseStreamGET( Url );
+            return responseStream;
+        }
+
+        public Stream GET( string Url, WebProxy Proxy )
+        {
+            responseStream = ResponseStreamGET( Url, Proxy );
             return responseStream;
         }
 
@@ -42,7 +54,18 @@ namespace YandexAPI
 
         private Stream ResponseStreamGET( string Url )
         {
+            return ResponseStreamGET(Url, null);
+        }
+
+        private Stream ResponseStreamGET( string Url, WebProxy Proxy )
+        {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create( Url );
+
+            if( Proxy != null )
+            {
+                request.Proxy = Proxy;
+            }
+
             //Получение ответа.
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
             Stream responsestream = response.GetResponseStream();
@@ -50,6 +73,11 @@ namespace YandexAPI
         }
 
         private Stream ResponseStreamPOST( string Url, string Command )
+        {
+            return ResponseStreamPOST(Url, Command, null);
+        }
+
+        private Stream ResponseStreamPOST( string Url, string Command, WebProxy Proxy )
         {
             byte[] bytes = Encoding.UTF8.GetBytes( Command );
 
@@ -61,6 +89,11 @@ namespace YandexAPI
             request.Method = "POST";
             request.ContentLength = bytes.Length;
             request.ContentType = "text/xml";
+
+            if( Proxy != null )
+            {
+                request.Proxy = Proxy;
+            }
 
             // Пишем наш XML-запрос в поток
             using( Stream requestStream = request.GetRequestStream() )

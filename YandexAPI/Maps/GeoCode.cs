@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Net;
 using System.Net.Mime;
 using System.Text;
 using System.Xml;
@@ -92,10 +93,26 @@ namespace YandexAPI.Maps
         /// <returns>Возвращаем объект Image</returns>
         public Image DownloadMapImage( string Url )
         {
+            return DownloadMapImage(Url, null);
+        }
+
+        /// <summary>
+        /// Метод для скачивания Image из интернета
+        /// </summary>
+        /// <param name="URL">URL скачиваемой Image</param>
+        /// <param name="Proxy">Передаем Proxy для подключения</param>
+        /// <returns>Возвращаем объект Image</returns>
+        public Image DownloadMapImage(string Url, WebProxy Proxy)
+        {
             Image tmpImage = null;
 
             // Open a connection
             System.Net.HttpWebRequest HttpWebRequest = (System.Net.HttpWebRequest)System.Net.HttpWebRequest.Create( Url );
+
+            if ( Proxy != null )
+            {
+                HttpWebRequest.Proxy = Proxy;
+            }
 
             HttpWebRequest.AllowWriteStreamBuffering = true;
 
@@ -120,7 +137,6 @@ namespace YandexAPI.Maps
                 //WebResponse.Close();
                 //WebResponse.Close();
             }
-            
 
             return tmpImage;
         }
