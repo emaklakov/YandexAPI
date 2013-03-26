@@ -107,17 +107,20 @@ namespace YandexAPI.Maps
             HttpWebRequest.Timeout = 20000;
 
             // Request response:
-            System.Net.WebResponse WebResponse = HttpWebRequest.GetResponse();
+            using( System.Net.WebResponse WebResponse = HttpWebRequest.GetResponse() )
+            {
+                // Open data stream:
+                using( System.IO.Stream WebStream = WebResponse.GetResponseStream() )
+                {
+                    // convert webstream to image
+                    tmpImage = Image.FromStream( WebStream );
+                }
 
-            // Open data stream:
-            System.IO.Stream WebStream = WebResponse.GetResponseStream();
-
-            // convert webstream to image
-            tmpImage = Image.FromStream( WebStream );
-
-            // Cleanup
-            WebResponse.Close();
-            WebResponse.Close();
+                // Cleanup - ?
+                //WebResponse.Close();
+                //WebResponse.Close();
+            }
+            
 
             return tmpImage;
         }

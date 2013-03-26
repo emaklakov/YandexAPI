@@ -26,7 +26,7 @@ namespace YandexAPI
 
         public PointD()
         {
-            
+
         }
 
         /// <summary>
@@ -63,6 +63,11 @@ namespace YandexAPI
             result.Y = integerY + ( Point.Y - integerY ) / 0.6;
 
             return result;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0}, {1}", X, Y);
         }
 
         public double X
