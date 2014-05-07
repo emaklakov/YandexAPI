@@ -8,38 +8,55 @@ namespace YandexAPI.Maps
 {
     public class PolygonMap
     {
-        private string _Id;
-        private PointD[] _Points;
-        
-        public PolygonMap( string Id )
+        private string _id;
+        private PointD[] _points;
+
+        /// <summary>
+        /// Id полигона
+        /// </summary>
+        public string Id
         {
-            _Id = Id;
+            get { return _id; }
+            set { _id = value; }
         }
 
-        public PolygonMap( string Id, PointD[] Points )
+        /// <summary>
+        /// Точки полигона
+        /// </summary>
+        public PointD[] Points
         {
-            _Id = Id;
-            _Points = Points;
+            get { return _points; }
+            set { _points = value; }
+        }
+
+        public PolygonMap( string id )
+        {
+            _id = id;
+        }
+
+        public PolygonMap( string id, PointD[] points)
+        {
+            _id = id;
+            _points = points;
         }
 
         /// <summary>
         /// Алгоритмом поиска принадлежности точки полигону на двухмерной плоскости
         /// </summary>
-        /// <param name="PolygonPoints">Массив точек полигона</param>
-        /// <param name="MainPoint">Точка проверки</param>
+        /// <param name="mainPoint">Точка проверки</param>
         /// <returns>Результат принадлежности к полигону</returns>
-        public bool IsInPolygon( PointD MainPoint )
+        public bool IsInPolygon( PointD mainPoint)
         {
             bool result = false;
 
             for( int i = 0, j = Points.Length - 1; i < Points.Length; j = i++ )
             {
-                if( Points[i].Y < MainPoint.Y && Points[j].Y >= MainPoint.Y ||
-                    Points[j].Y < MainPoint.Y && Points[i].Y >= MainPoint.Y )
+                if( Points[i].Y < mainPoint.Y && Points[j].Y >= mainPoint.Y ||
+                    Points[j].Y < mainPoint.Y && Points[i].Y >= mainPoint.Y )
                 {
-                    if( Points[i].X + ( MainPoint.Y - Points[i].Y ) /
+                    if( Points[i].X + ( mainPoint.Y - Points[i].Y ) /
                       ( Points[j].Y - Points[i].Y ) *
-                      ( Points[j].X - Points[i].X ) < MainPoint.X )
+                      ( Points[j].X - Points[i].X ) < mainPoint.X )
                     {
                         result = !result;
                     }
@@ -51,67 +68,35 @@ namespace YandexAPI.Maps
         /// <summary>
         /// Получаем точки полигона из строки с координатами
         /// </summary>
-        /// <param name="StringPoints">Строка с координатами</param>
+        /// <param name="stringPoints">Строка с координатами</param>
         /// <returns>Возвращает массив точек</returns>
-        public static PointD[] GetPointsFromString(string StringPoints)
+        public static PointD[] GetPointsFromString(string stringPoints)
         {
-            string[] coordinates = StringPoints.Split(new char[] {' '});
-
-            PointD[] result = new PointD[coordinates.Length/2];
-
+            string[] coordinates = stringPoints.Split(new[] {' '});
+            var result = new PointD[coordinates.Length/2];
             int j = 0;
             for( int i = 0; i < coordinates.Length;  i = i+2 )
             {
                 PointD point = new PointD();
                 point.X = Double.Parse( coordinates[i], new CultureInfo( "en-GB" ) );
-                point.Y = Double.Parse( coordinates[i + 1], new CultureInfo( "en-GB" ) );
-
+                point.Y = Double.Parse( coordinates[i + 1], new CultureInfo( "en-GB" ));
                 result[j] = point;
-
                 if( j >= result.Length )
                     break;
-
                 j++;
             }
-
             return result;
         }
 
         /// <summary>
         /// Возвращаем Id полигона, которому пренадлежит точка
         /// </summary>
-        /// <param name="Polygons">Полигоны, которых нужно искать точку</param>
-        /// <param name="MainPoint">Точка для проверки</param>
+        /// <param name="polygons">Полигоны, которых нужно искать точку</param>
+        /// <param name="mainPoint">Точка для проверки</param>
         /// <returns>Возвращает Id полигона</returns>
-        public static string GetIdPolygonOwnerPoint( PolygonMap[] Polygons, PointD MainPoint )
+        public static string GetIdPolygonOwnerPoint( PolygonMap[] polygons, PointD mainPoint )
         {
-            foreach (var polygonMap in Polygons)
-            {
-                if( polygonMap.IsInPolygon( MainPoint ) )
-                {
-                    return polygonMap.Id;
-                }
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Id полигона
-        /// </summary>
-        public string Id
-        {
-            get { return _Id; }
-            set { _Id = value; }
-        }
-
-        /// <summary>
-        /// Точки полигона
-        /// </summary>
-        public PointD[] Points
-        {
-            get { return _Points; }
-            set { _Points = value; }
+            return polygons.Where(x => x.IsInPolygon(mainPoint)).Select(polygonMap => polygonMap.Id).FirstOrDefault();
         }
     }
 }

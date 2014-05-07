@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Mime;
@@ -14,130 +15,105 @@ namespace YandexAPI.Maps
         /// <summary>
         /// Определяем координаты объекта
         /// </summary>
-        /// <param name="Address">Адрес объекта</param>
+        /// <param name="address">Адрес объекта</param>
         /// <returns>Ответ в формате XML. YMapsML</returns>
-        public string SearchObject(string Address)
+        public string SearchObject(string address)
         {
-            string urlXml = "http://geocode-maps.yandex.ru/1.x/?geocode=" + Address + "&results=1";
-            YandexAPI.Request request = new YandexAPI.Request();
-            string result = request.GetResponseToString( request.GET( urlXml ) );
+            string urlXml = "http://geocode-maps.yandex.ru/1.x/?geocode=" + address + "&results=1";
+            var request = new Request();
+            string result = request.GetResponseToString(request.GET(urlXml));
             return result;
         }
 
         /// <summary>
         /// Поиск объекта по координатам
         /// </summary>
-        /// <param name="Latitude">Широта</param>
-        /// <param name="Longitude">Долгота</param>
+        /// <param name="latitude">Широта</param>
+        /// <param name="longitude">Долгота</param>
         /// <returns>Ответ в формате XML. YMapsML</returns>
-        public string SearchObject( double Latitude, double Longitude )
+        public string SearchObject(double latitude, double longitude)
         {
-            string urlXml = "http://geocode-maps.yandex.ru/1.x/?geocode=" + String.Format( "{0},{1}", Latitude.ToString().Replace( ",", "." ), Longitude.ToString().Replace( ",", "." ) ) + "&results=1";
-            YandexAPI.Request request = new YandexAPI.Request();
-            string result = request.GetResponseToString( request.GET( urlXml ) );
+            string urlXml = "http://geocode-maps.yandex.ru/1.x/?geocode=" + String.Format("{0},{1}", latitude.ToString(CultureInfo.InvariantCulture).Replace(",", "."), longitude.ToString(CultureInfo.InvariantCulture).Replace(",", ".")) + "&results=1";
+            var request = new Request();
+            string result = request.GetResponseToString(request.GET(urlXml));
             return result;
         }
 
         /// <summary>
         /// Возвращает URL на статический рисунок карты с точкой поиска в центре
         /// </summary>
-        /// <param name="ResultSearchObject">XML резудьтат поиска</param>
+        /// <param name="resultSearchObject">XML резудьтат поиска</param>
         /// <param name="zPosition">Может быть от 1 до 17</param>
-        /// <param name="Width">Ширина. Может быть от 1 до 650</param>
-        /// <param name="Height">Высота. Может быть от 1 до 450</param>
+        /// <param name="width">Ширина. Может быть от 1 до 650</param>
+        /// <param name="height">Высота. Может быть от 1 до 450</param>
         /// <returns>Url на Image</returns>
-        public string GetUrlMapImage( string ResultSearchObject, int zPosition, int Width, int Height )
+        public string GetUrlMapImage(string resultSearchObject, int zPosition, int width, int height)
         {
-            string point = GetPoint(ResultSearchObject);
-
-            return String.Format( "http://static-maps.yandex.ru/1.x/?ll={0}&size={1},{2}&z={3}&l=map&pt={0},pm2lbm&lang=ru-RU", point, Width, Height, zPosition );
+            string point = GetPoint(resultSearchObject);
+            return String.Format("http://static-maps.yandex.ru/1.x/?ll={0}&size={1},{2}&z={3}&l=map&pt={0},pm2lbm&lang=ru-RU", point, width, height, zPosition);
         }
 
-        public string GetPoint( string ResultSearchObject )
+        public string GetPoint(string resultSearchObject)
         {
-            string point = "";
-
+            string point = String.Empty;
             XmlDocument xd = new XmlDocument();
-            xd.LoadXml( ResultSearchObject );
-
-            XmlNode ymaps = xd.DocumentElement;
-
-            XmlNodeList GeoObjectTemp = xd.GetElementsByTagName( "GeoObject" );
-
-            foreach( XmlNode node in GeoObjectTemp )
+            xd.LoadXml(resultSearchObject);
+            XmlNodeList geoObjectTemp = xd.GetElementsByTagName("GeoObject");
+            foreach (XmlNode node in geoObjectTemp)
             {
-                foreach( XmlNode item in node.ChildNodes )
+                foreach (XmlNode item in node.ChildNodes)
                 {
-                    if( item.Name == "Point" )
+                    if (item.Name == "Point")
                     {
-                        point = item.LastChild.InnerXml.Replace( ' ', ',' );
+                        point = item.LastChild.InnerXml.Replace(' ', ',');
                     }
                 }
-
                 break;
             }
-
             return point;
         }
 
-        public PointD GetPointD( string ResultSearchObject )
+        public PointD GetPointD(string resultSearchObject)
         {
-            PointD result = new PointD( GetPoint( ResultSearchObject ) );
+            PointD result = new PointD(GetPoint(resultSearchObject));
             return result;
         }
 
         /// <summary>
         /// Метод для скачивания Image из интернета
         /// </summary>
-        /// <param name="URL">URL скачиваемой Image</param>
+        /// <param name="uri">URL скачиваемой Image</param>
         /// <returns>Возвращаем объект Image</returns>
-        public Image DownloadMapImage( string Url )
+        public Image DownloadMapImage(string uri)
         {
-            return DownloadMapImage(Url, null);
+            return DownloadMapImage(uri, null);
         }
 
         /// <summary>
         /// Метод для скачивания Image из интернета
         /// </summary>
-        /// <param name="URL">URL скачиваемой Image</param>
-        /// <param name="Proxy">Передаем Proxy для подключения</param>
+        /// <param name="uri">URL скачиваемой Image</param>
+        /// <param name="proxy">Передаем Proxy для подключения</param>
         /// <returns>Возвращаем объект Image</returns>
-        public Image DownloadMapImage(string Url, WebProxy Proxy)
+        public Image DownloadMapImage(string uri, WebProxy proxy)
         {
             Image tmpImage = null;
-
-            // Open a connection
-            System.Net.HttpWebRequest HttpWebRequest = (System.Net.HttpWebRequest)System.Net.HttpWebRequest.Create( Url );
-
-            if ( Proxy != null )
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(uri);
+            if (proxy != null)
             {
-                HttpWebRequest.Proxy = Proxy;
+                httpWebRequest.Proxy = proxy;
             }
-
-            HttpWebRequest.AllowWriteStreamBuffering = true;
-
-            // You can also specify additional header values like the user agent or the referer: (Optional)
-            HttpWebRequest.UserAgent = "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)";
-            HttpWebRequest.Referer = "http://www.google.com/";
-
-            // set timeout for 20 seconds (Optional)
-            HttpWebRequest.Timeout = 20000;
-
-            // Request response:
-            using( System.Net.WebResponse WebResponse = HttpWebRequest.GetResponse() )
+            httpWebRequest.AllowWriteStreamBuffering = true;
+            httpWebRequest.UserAgent = "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)";
+            httpWebRequest.Referer = "http://www.google.com/";
+            httpWebRequest.Timeout = 20000;
+            using (WebResponse webResponse = httpWebRequest.GetResponse())
             {
-                // Open data stream:
-                using( System.IO.Stream WebStream = WebResponse.GetResponseStream() )
+                using (System.IO.Stream webStream = webResponse.GetResponseStream())
                 {
-                    // convert webstream to image
-                    tmpImage = Image.FromStream( WebStream );
+                    if (webStream != null) tmpImage = Image.FromStream(webStream);
                 }
-
-                // Cleanup - ?
-                //WebResponse.Close();
-                //WebResponse.Close();
             }
-
             return tmpImage;
         }
     }

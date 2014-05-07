@@ -12,96 +12,75 @@ namespace YandexAPI
 {
     public class Request
     {
-        private Stream responseStream;
+        private Stream _responseStream;
 
-        public Stream POST( string Url, string Command )
+        public Stream POST( string url, string command )
         {
-            responseStream = ResponseStreamPOST( Url, Command );
-            return responseStream;
+            _responseStream = ResponseStreamPost( url, command );
+            return _responseStream;
         }
 
-        public Stream POST( string Url, string Command, WebProxy Proxy )
+        public Stream POST( string url, string command, WebProxy proxy )
         {
-            responseStream = ResponseStreamPOST( Url, Command, Proxy );
-            return responseStream;
+            _responseStream = ResponseStreamPost( url, command, proxy );
+            return _responseStream;
         }
 
-        public Stream GET( string Url )
+        public Stream GET( string url )
         {
-            responseStream = ResponseStreamGET( Url );
-            return responseStream;
+            _responseStream = ResponseStreamGet( url );
+            return _responseStream;
         }
 
-        public Stream GET( string Url, WebProxy Proxy )
+        public Stream GET( string url, WebProxy proxy )
         {
-            responseStream = ResponseStreamGET( Url, Proxy );
-            return responseStream;
+            _responseStream = ResponseStreamGet( url, proxy );
+            return _responseStream;
         }
 
-        public XDocument GetResponseToXDocument( Stream RequestMetod )
+        public XDocument GetResponseToXDocument( Stream requestMetod )
         {
-            XmlReader xmlReader = XmlReader.Create( RequestMetod );
+            XmlReader xmlReader = XmlReader.Create( requestMetod );
             return XDocument.Load( xmlReader );
         }
 
-        public string GetResponseToString( Stream RequestMetod )
+        public string GetResponseToString( Stream requestMetod )
         {
-            using( StreamReader ResponseStreamReader = new StreamReader( RequestMetod ) )
+            using( StreamReader responseStreamReader = new StreamReader( requestMetod ) )
             {
-                return ResponseStreamReader.ReadToEnd();
+                return responseStreamReader.ReadToEnd();
             }
         }
 
-        private Stream ResponseStreamGET( string Url )
+        private Stream ResponseStreamGet( string url, WebProxy proxy = null)
         {
-            return ResponseStreamGET(Url, null);
-        }
-
-        private Stream ResponseStreamGET( string Url, WebProxy Proxy )
-        {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create( Url );
-
-            if( Proxy != null )
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create( url );
+            if( proxy != null )
             {
-                request.Proxy = Proxy;
+                request.Proxy = proxy;
             }
-
-            //Получение ответа.
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
             Stream responsestream = response.GetResponseStream();
             return responsestream;
         }
 
-        private Stream ResponseStreamPOST( string Url, string Command )
+        private Stream ResponseStreamPost( string url, string command, WebProxy proxy = null)
         {
-            return ResponseStreamPOST(Url, Command, null);
-        }
-
-        private Stream ResponseStreamPOST( string Url, string Command, WebProxy Proxy )
-        {
-            byte[] bytes = Encoding.UTF8.GetBytes( Command );
-
-            // Объект, с помощью которого будем отсылать запрос и получать ответ.
-            HttpRequestCachePolicy policy = new HttpRequestCachePolicy( HttpRequestCacheLevel.NoCacheNoStore );
+            byte[] bytes = Encoding.UTF8.GetBytes( command );
+            HttpRequestCachePolicy policy = new HttpRequestCachePolicy(HttpRequestCacheLevel.NoCacheNoStore);
             HttpWebRequest.DefaultCachePolicy = policy;
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create( Url );
-
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create( url );
             request.Method = "POST";
             request.ContentLength = bytes.Length;
             request.ContentType = "text/xml";
-
-            if( Proxy != null )
+            if( proxy != null )
             {
-                request.Proxy = Proxy;
+                request.Proxy = proxy;
             }
-
-            // Пишем наш XML-запрос в поток
             using( Stream requestStream = request.GetRequestStream() )
             {
                 requestStream.Write( bytes, 0, bytes.Length );
             }
-
-            // Получаем ответ
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
             Stream responsestream = response.GetResponseStream();
             return responsestream;
