@@ -21,7 +21,7 @@ namespace YandexAPI.Maps
         {
             string urlXml = "http://geocode-maps.yandex.ru/1.x/?geocode=" + address + "&results=1";
             var request = new Request();
-            string result = request.GetResponseToString(request.GET(urlXml));
+            string result = request.Get(urlXml);
             return result;
         }
 
@@ -35,7 +35,7 @@ namespace YandexAPI.Maps
         {
             string urlXml = "http://geocode-maps.yandex.ru/1.x/?geocode=" + String.Format("{0},{1}", latitude.ToString(CultureInfo.InvariantCulture).Replace(",", "."), longitude.ToString(CultureInfo.InvariantCulture).Replace(",", ".")) + "&results=1";
             var request = new Request();
-            string result = request.GetResponseToString(request.GET(urlXml));
+            string result = request.Get(urlXml);
             return result;
         }
 
