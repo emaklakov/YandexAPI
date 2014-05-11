@@ -22,6 +22,7 @@ namespace YandexAPIGetСoordinates
             Console.WriteLine("Прямое геокодирование API Яндекс.Карт");
             string result = YandexMap.Get(url);
             PointD pointD = GeoCode.GetPointD(result);
+
             Console.WriteLine(pointD);
             Console.ReadKey(true);
         }
