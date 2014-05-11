@@ -18,17 +18,17 @@ namespace YandexAPI
     public class Request
     {
        
-        public string Get(string url, WebProxy proxy = null)
+        public static string Get(string url, WebProxy proxy = null)
         {
             return ResponseToStringGet(url, proxy);
         }
 
-        public string Post(string url, string command, WebProxy proxy = null)
+        public static string Post(string url, string command, WebProxy proxy = null)
         {
             return ResponseToStringPost(url, command, proxy);
         }
 
-        private string ResponseToStringGet(string url, WebProxy proxy = null)
+        private static string ResponseToStringGet(string url, WebProxy proxy = null)
         {
             string result = String.Empty;
             var request = (HttpWebRequest)WebRequest.Create(url);
@@ -46,7 +46,7 @@ namespace YandexAPI
         }
 
 
-        private string ResponseToStringPost(string url, string command, WebProxy proxy = null)
+        private static string ResponseToStringPost(string url, string command, WebProxy proxy = null)
         {
             string result = String.Empty;
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
