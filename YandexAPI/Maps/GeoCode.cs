@@ -36,7 +36,7 @@ namespace YandexAPI.Maps
         /// <returns>Ответ в формате XML. YMapsML</returns>
         public static string SearchObject(double latitude, double longitude)
         {
-            string urlXml = String.Format(_uri, String.Format("{0},{1}", latitude, longitude));
+            string urlXml = String.Format(_uri, String.Format("{0},{1}", latitude.ToString(CultureInfo.InvariantCulture).Replace(",", "."), longitude.ToString(CultureInfo.InvariantCulture).Replace(",", ".")));
             string result = Request.Get(urlXml);
             return result;
         }
