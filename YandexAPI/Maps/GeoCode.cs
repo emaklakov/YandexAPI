@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Mime;
+using System.Security.Policy;
 using System.Text;
 using System.Xml;
 
@@ -12,6 +13,9 @@ namespace YandexAPI.Maps
 {
     public class GeoCode
     {
+
+        private static string _uri = "http://geocode-maps.yandex.ru/1.x/?geocode={0}&results=1";
+
         /// <summary>
         /// Определяем координаты объекта
         /// </summary>
@@ -19,7 +23,7 @@ namespace YandexAPI.Maps
         /// <returns>Ответ в формате XML. YMapsML</returns>
         public static string SearchObject(string address)
         {
-            string urlXml = "http://geocode-maps.yandex.ru/1.x/?geocode=" + address + "&results=1";
+            string urlXml = String.Format(_uri, address);
             string result = Request.Get(urlXml);
             return result;
         }
@@ -32,7 +36,7 @@ namespace YandexAPI.Maps
         /// <returns>Ответ в формате XML. YMapsML</returns>
         public static string SearchObject(double latitude, double longitude)
         {
-            string urlXml = "http://geocode-maps.yandex.ru/1.x/?geocode=" + String.Format("{0},{1}", latitude.ToString(CultureInfo.InvariantCulture).Replace(",", "."), longitude.ToString(CultureInfo.InvariantCulture).Replace(",", ".")) + "&results=1";
+            string urlXml = String.Format(_uri, String.Format("{0},{1}", latitude, longitude));
             string result = Request.Get(urlXml);
             return result;
         }

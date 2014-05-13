@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,7 +23,6 @@ namespace YandexAPIGetСoordinates
             Console.WriteLine("Прямое геокодирование API Яндекс.Карт");
             string result = YandexMap.Get(url);
             PointD pointD = GeoCode.GetPointD(result);
-
             Console.WriteLine(pointD);
             Console.ReadKey(true);
         }
