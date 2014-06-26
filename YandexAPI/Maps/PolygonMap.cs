@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Xml;
+using Microsoft.Win32.SafeHandles;
 
 namespace YandexAPI.Maps
 {
@@ -10,6 +12,10 @@ namespace YandexAPI.Maps
     {
         private string _Id;
         private PointD[] _Points;
+
+        public PolygonMap()
+        {
+        }
         
         public PolygonMap( string Id )
         {
@@ -77,13 +83,63 @@ namespace YandexAPI.Maps
             return result;
         }
 
+        public static List<PolygonMap> GetPolygonsOnMap(string ResultKML)
+        {
+            List<PolygonMap> Polygons = new List<PolygonMap>();
+
+            XmlDocument xd = new XmlDocument();
+            xd.LoadXml(ResultKML);
+
+            XmlNode kml = xd.DocumentElement;
+
+            XmlNodeList GeoObjectTemp = xd.GetElementsByTagName("Folder");
+
+            foreach (XmlNode node in GeoObjectTemp)
+            {
+                foreach (XmlNode item in node.ChildNodes)
+                {
+                    
+                    if (item.Name == "Placemark")
+                    {
+                        PolygonMap Polygon = new PolygonMap();
+                        bool IsPolygon = false;
+
+                        foreach (XmlNode PlacemarkItems in item.ChildNodes)
+                        {
+                            if (PlacemarkItems.Name == "description")
+                            {
+                                IsPolygon = (PlacemarkItems.InnerXml.Trim() == "Polygon");
+                            }
+                            else if (PlacemarkItems.Name == "name")
+                            {
+                                Polygon.Id = PlacemarkItems.InnerXml;
+                            }
+                            else if (PlacemarkItems.Name == "LinearRing")
+                            {
+                                Polygon.Points = PolygonMap.GetPointsFromString(item.LastChild["coordinates"].InnerXml.Replace(',', ' '));
+                            }
+                        }
+                        
+                        if (IsPolygon)
+                        {
+                            Polygons.Add(Polygon);    
+                        }
+                    }
+                }
+
+                
+            }
+
+            return Polygons;
+        }
+
         /// <summary>
         /// Возвращаем Id полигона, которому пренадлежит точка
         /// </summary>
         /// <param name="Polygons">Полигоны, которых нужно искать точку</param>
         /// <param name="MainPoint">Точка для проверки</param>
         /// <returns>Возвращает Id полигона</returns>
-        public static string GetIdPolygonOwnerPoint( PolygonMap[] Polygons, PointD MainPoint )
+        public static string GetIdPolygonOwnerPoint(IEnumerable<PolygonMap> Polygons, PointD MainPoint)
         {
             foreach (var polygonMap in Polygons)
             {
@@ -112,6 +168,18 @@ namespace YandexAPI.Maps
         {
             get { return _Points; }
             set { _Points = value; }
+        }
+
+        public override string ToString()
+        {
+            string result = "";
+
+            foreach (PointD pointD in _Points)
+            {
+                result += String.Format("{0} {1} ", pointD.X.ToString(), pointD.Y.ToString());
+            }
+
+            return result.Trim();
         }
     }
 }

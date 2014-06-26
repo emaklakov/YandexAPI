@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using YandexAPI;
 using YandexAPI.Maps;
 
@@ -15,9 +17,9 @@ namespace SampleYandexAPI
         {
             #region GET Request
 
-            string urlXml = "http://geocode-maps.yandex.ru/1.x/?geocode=" + "76.912335,43.280810" + "&results=1";
+            //string urlXml = "http://geocode-maps.yandex.ru/1.x/?geocode=" + "76.912335,43.280810" + "&results=1";
 
-            YandexAPI.Request request = new YandexAPI.Request();
+            //YandexAPI.Request request = new YandexAPI.Request();
             //79.134.7.86:3128
 
             //string result = request.GetResponseToString( request.GET( urlXml ) );
@@ -143,12 +145,30 @@ namespace SampleYandexAPI
 
             #endregion IsInPolygon
 
+            #region GetPolygonFromKML
+
+            YandexAPI.Maps.GeoCode geoCode = new GeoCode();
+
+            /*
+             При создании полигона в описание полигона надо написать: Polygon 
+             */
+
+            string ResultKML = geoCode.GetKML("http://maps.yandex.ru/export/usermaps/CWF_KCyzzmrChLts1Szs3E2hHh8m-iiB.kml");
+
+            List<PolygonMap> polygons = PolygonMap.GetPolygonsOnMap(ResultKML);
+
+            PointD MainPoint = new PointD(76.90679583201461, 43.2556333183541);
+            
+            string result = PolygonMap.GetIdPolygonOwnerPoint(polygons, MainPoint);
+
+            #endregion GetPolygonFromYMapsML
+
             #region GetIdPolygonOwnerPoint
 
             //YandexAPI.Maps.GeoCode geoCode = new GeoCode();
 
-            //string ResultSearchObject = geoCode.SearchObject( "Алматы, ул.Айтиева, 42" );
-            //PointD MainPoint = geoCode.GetPointD( ResultSearchObject );
+            //string ResultSearchObject = geoCode.SearchObject("Алматы, ул.Айтиева, 42");
+            //PointD MainPoint = geoCode.GetPointD(ResultSearchObject);
 
             //// False
             //PointD[] PointsA = new PointD[] { new PointD( 76.91874334111112, 43.25301084554285 ), 
@@ -175,7 +195,13 @@ namespace SampleYandexAPI
             //                                 new PointD( 76.90239464190255, 43.25181621627961  ), 
             //                                 new PointD( 76.90175091173897, 43.25658413329047 ) };
 
-            //PolygonMap[] polygons = new PolygonMap[] { new PolygonMap( "A", PointsA ), new PolygonMap( "B", PointsB ) };
+            //PointD[] PointsA = PolygonMap.GetPointsFromString(
+            //        "76.90175091173897 43.25658413329047 76.91089188006175 43.2575251251192 76.91127811815986 43.25423158964632 76.91638504412424 43.25451389971651 76.91629921343578 43.25369833369539 76.9159988060261 43.252820019524655 76.91144977953685 43.25250633280052 76.90239464190255 43.25181621627961 76.90175091173897 43.25658413329047");
+
+            //PointD[] PointsB = PolygonMap.GetPointsFromString(
+            //        "76.90175091173897 43.25658413329047 76.91089188006175 43.2575251251192 76.91127811815986 43.25423158964632 76.91638504412424 43.25451389971651 76.91629921343578 43.25369833369539 76.9159988060261 43.252820019524655 76.91144977953685 43.25250633280052 76.90239464190255 43.25181621627961 76.90175091173897 43.25658413329047");
+
+            //PolygonMap[] polygons = new PolygonMap[] { new PolygonMap("A", PointsA), new PolygonMap("B", PointsB) };
 
             //string result = PolygonMap.GetIdPolygonOwnerPoint(polygons, MainPoint);
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mime;
@@ -35,6 +36,21 @@ namespace YandexAPI.Maps
             string urlXml = "http://geocode-maps.yandex.ru/1.x/?geocode=" + String.Format( "{0},{1}", Latitude.ToString().Replace( ",", "." ), Longitude.ToString().Replace( ",", "." ) ) + "&results=1";
             YandexAPI.Request request = new YandexAPI.Request();
             string result = request.GetResponseToString( request.GET( urlXml ) );
+            return result;
+        }
+
+        public string GetKML(string Url)
+        {
+            YandexAPI.Request request = new YandexAPI.Request();
+            string result = request.GetResponseToString(request.GET(Url));
+            return result;    
+        }
+
+        public string GetKMLFromFile(string PathFile)
+        {
+            YandexAPI.Request request = new YandexAPI.Request();
+            FileStream kml = new FileStream(PathFile, FileMode.Open);
+            string result = request.GetResponseToString(kml);
             return result;
         }
 
