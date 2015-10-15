@@ -40,9 +40,12 @@ namespace SampleYandexAPI
 
             //string result = geoCode.SearchObject( "Алматы, ул.Айтиева, 42" ); // 76.904529 43.254999
 
-            //string result = geoCode.SearchObject( 76.904529, 43.254999 );
-            
+            //string ResultSearchObject = geoCode.SearchObject( 76.904529, 43.254999 );
+
+            //string Address = geoCode.GetAddress(ResultSearchObject);
+
             //Console.WriteLine( result );
+            //Console.WriteLine(Address);
             //Console.ReadLine();
 
             #endregion Search Object
@@ -147,19 +150,19 @@ namespace SampleYandexAPI
 
             #region GetPolygonFromKML
 
-            YandexAPI.Maps.GeoCode geoCode = new GeoCode();
+            //YandexAPI.Maps.GeoCode geoCode = new GeoCode();
 
             /*
              При создании полигона в описание полигона надо написать: Polygon 
              */
 
-            string ResultKML = geoCode.GetKML("http://maps.yandex.ru/export/usermaps/CWF_KCyzzmrChLts1Szs3E2hHh8m-iiB.kml");
+            //string ResultKML = geoCode.GetKML("http://maps.yandex.ru/export/usermaps/CWF_KCyzzmrChLts1Szs3E2hHh8m-iiB.kml");
 
-            List<PolygonMap> polygons = PolygonMap.GetPolygonsOnMap(ResultKML);
+            //List<PolygonMap> polygons = PolygonMap.GetPolygonsOnMap(ResultKML);
 
-            PointD MainPoint = new PointD(76.90679583201461, 43.2556333183541);
-            
-            string result = PolygonMap.GetIdPolygonOwnerPoint(polygons, MainPoint);
+            //PointD MainPoint = new PointD(76.90679583201461, 43.2556333183541);
+
+            //string result = PolygonMap.GetIdPolygonOwnerPoint(polygons, MainPoint);
 
             #endregion GetPolygonFromYMapsML
 

@@ -31,12 +31,57 @@ namespace YandexAPI.Maps
         /// <param name="Latitude">Широта</param>
         /// <param name="Longitude">Долгота</param>
         /// <returns>Ответ в формате XML. YMapsML</returns>
-        public string SearchObject( double Latitude, double Longitude )
+        public string SearchObject(double Latitude, double Longitude)
         {
             string urlXml = "http://geocode-maps.yandex.ru/1.x/?geocode=" + String.Format( "{0},{1}", Latitude.ToString().Replace( ",", "." ), Longitude.ToString().Replace( ",", "." ) ) + "&results=1";
             YandexAPI.Request request = new YandexAPI.Request();
             string result = request.GetResponseToString( request.GET( urlXml ) );
             return result;
+        }
+
+        /// <summary>
+        /// Получаем найденный адрес
+        /// </summary>
+        /// <param name="ResultSearchObject">XML резудьтат поиска</param>
+        /// <returns>Возвращает адрес</returns>
+        public string GetAddress(string ResultSearchObject)
+        {
+            string Address = "";
+
+            XmlDocument xd = new XmlDocument();
+            xd.LoadXml(ResultSearchObject);
+
+            XmlNode ymaps = xd.DocumentElement;
+
+            XmlNodeList GeoObjectTemp = xd.GetElementsByTagName("GeoObject");
+
+            foreach (XmlNode node in GeoObjectTemp)
+            {
+                foreach (XmlNode item in node.ChildNodes)
+                {
+                    if (item.Name == "metaDataProperty")
+                    {
+                        foreach (XmlNode itemMetaDataProperty in item.ChildNodes)
+                        {
+                            if (itemMetaDataProperty.Name == "GeocoderMetaData")
+                            {
+                                foreach (XmlNode itemGeocoderMetaData in itemMetaDataProperty.ChildNodes)
+                                {
+                                    if (itemGeocoderMetaData.Name == "text")
+                                    {
+                                        Address = itemGeocoderMetaData.LastChild.InnerText;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                break;
+            }
+
+            return Address;
         }
 
         public string GetKML(string Url)
@@ -46,7 +91,7 @@ namespace YandexAPI.Maps
             return result;    
         }
 
-        public string GetKMLFromFile(string PathFile)
+        public string GetKMLFromFile( string PathFile )
         {
             YandexAPI.Request request = new YandexAPI.Request();
             FileStream kml = new FileStream(PathFile, FileMode.Open);
