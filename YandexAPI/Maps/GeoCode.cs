@@ -53,31 +53,18 @@ namespace YandexAPI.Maps
 
             XmlNode ymaps = xd.DocumentElement;
 
-            XmlNodeList GeoObjectTemp = xd.GetElementsByTagName("GeoObject");
+            XmlNodeList GeoObjectTemp = xd.GetElementsByTagName("GeocoderMetaData");
 
             foreach (XmlNode node in GeoObjectTemp)
             {
                 foreach (XmlNode item in node.ChildNodes)
                 {
-                    if (item.Name == "metaDataProperty")
+                    if (item.Name == "text")
                     {
-                        foreach (XmlNode itemMetaDataProperty in item.ChildNodes)
-                        {
-                            if (itemMetaDataProperty.Name == "GeocoderMetaData")
-                            {
-                                foreach (XmlNode itemGeocoderMetaData in itemMetaDataProperty.ChildNodes)
-                                {
-                                    if (itemGeocoderMetaData.Name == "text")
-                                    {
-                                        Address = itemGeocoderMetaData.LastChild.InnerText;
-                                        break;
-                                    }
-                                }
-                            }
-                        }
+                        Address = item.LastChild.InnerText;
+                        break;
                     }
-                }
-
+                } 
                 break;
             }
 
