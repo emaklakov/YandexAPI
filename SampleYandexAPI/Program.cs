@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -13,6 +14,7 @@ namespace SampleYandexAPI
 {
     class Program
     {
+        [STAThread()]
         static void Main( string[] args )
         {
             #region GET Request
@@ -233,6 +235,73 @@ namespace SampleYandexAPI
             //string result = String.Format("{0}, {1}", pointYandex.X, pointYandex.Y);
 
             #endregion ConvertGPSToYandexPoint
+
+            #region Route 
+
+            PointD[] Dots = new PointD[] { new PointD(76.950127, 43.228284), new PointD(76.944463, 43.270571) };
+
+            //PointD DotA = new PointD(76.950127, 43.228284);
+            //PointD DotB = new PointD(76.944463, 43.270571);                             
+
+            //PointD DotA = new PointD(76.950127, 43.228284);
+            //PointD DotB = new PointD(76.944463, 43.270571);
+
+            //PointD DotA = new PointD(36.2656938, 50.6912032);
+            //PointD DotB = new PointD(36.265112, 50.6916124);
+
+            Route route = new Route(10);
+
+            //if (route.Load(DotA, DotB))
+            //{
+            //    string RouteLength = route.RouteLength; // Длина в метрах
+            //    string RouteJamsTime = route.RouteJamsTime; // Время проезда в секундах с учетом пробок
+            //    string RouteTime = route.RouteTime; // Время проезда в секундах
+            //    string RouteHumanLength = route.RouteHumanLength; // Возвращает строковое представление длины маршрута с единицами измерения.
+            //    string RouteHumanJamsTime = route.RouteHumanJamsTime; // Возвращает строковое представление времени проезда маршрута с единицами измерения с учетом пробок.
+            //    string RouteHumanTime = route.RouteHumanTime; // Возвращает строковое представление времени проезда маршрута с единицами измерения.
+
+            //    Console.WriteLine(RouteLength);
+            //    Console.WriteLine(RouteJamsTime);
+            //    Console.WriteLine(RouteTime);
+            //    Console.WriteLine(RouteHumanLength);
+            //    Console.WriteLine(RouteHumanJamsTime);
+            //    Console.WriteLine(RouteHumanTime);
+            //}
+
+            if (route.Load(Dots))
+            {
+                string RouteLength = route.RouteLength; // Длина в метрах
+                string RouteJamsTime = route.RouteJamsTime; // Время проезда в секундах с учетом пробок
+                string RouteTime = route.RouteTime; // Время проезда в секундах
+                string RouteHumanLength = route.RouteHumanLength; // Возвращает строковое представление длины маршрута с единицами измерения.
+                string RouteHumanJamsTime = route.RouteHumanJamsTime; // Возвращает строковое представление времени проезда маршрута с единицами измерения с учетом пробок.
+                string RouteHumanTime = route.RouteHumanTime; // Возвращает строковое представление времени проезда маршрута с единицами измерения.
+
+                Console.WriteLine(RouteLength);
+                Console.WriteLine(RouteJamsTime);
+                Console.WriteLine(RouteTime);
+                Console.WriteLine(RouteHumanLength);
+                Console.WriteLine(RouteHumanJamsTime);
+                Console.WriteLine(RouteHumanTime);
+            }
+
+            //for (int i = 0; i < 3000; i++)
+            //{
+            //    PointD DotA = new PointD(36.2656938, 50.6912032);
+            //    PointD DotB = new PointD(36.265112, 50.6916124);
+
+            //    if (route.Load(DotA, DotB))
+            //    {
+            //        Console.WriteLine(route.RouteHumanLength);
+            //    }
+
+            //    //Thread.Sleep(300);
+            //}
+
+            Console.WriteLine("END");
+            Console.ReadLine();
+
+            #endregion Route
         }
     }
 }
