@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -10,7 +11,7 @@ namespace YandexAPI
 {
     public class Route
     {
-        //WebBrowser webBrowser = new WebBrowser();
+        private string routeId = "";
 
         private int requestTimeout = 10;
         // Длина в метрах
@@ -84,58 +85,56 @@ namespace YandexAPI
                 requestTimeout = value;
             }
         }
-
+                                                         
         [STAThread()]
-        public bool Load(PointD[] RoutePoints)
+        public Route Load(PointD[] RoutePoints)
         {
-            bool IsLoad = false;
-
             using (WebBrowser webBrowser = new WebBrowser())
             {
+                ScriptManager scriptManager = new ScriptManager();
+
                 webBrowser.ScriptErrorsSuppressed = true;
-                webBrowser.ObjectForScripting = new ScriptManager();
+                webBrowser.ObjectForScripting = scriptManager;
                 webBrowser.WebBrowserShortcutsEnabled = false;
 
-                ScriptManager.GetState = ScriptManager.State.Running;
+                scriptManager.GetState = ScriptManager.State.Running;
 
                 string jsCode = GetJSCode(RoutePoints);
-
-                webBrowser.DocumentText = String.Format(htmlTemplate, jsCode);
+                webBrowser.DocumentText = String.Format(htmlTemplate, jsCode); 
 
                 bool IsCheck = true;
                 DateTime starTime = DateTime.Now;
 
                 while (IsCheck)
                 {
-                    switch (ScriptManager.GetState)
+                    switch (scriptManager.GetState)
                     {
                         case ScriptManager.State.Ok:
-                            RouteLength = ScriptManager.routeLength;
-                            RouteJamsTime = ScriptManager.routeJamsTime;
-                            RouteTime = ScriptManager.routeTime;
-                            RouteHumanLength = ScriptManager.routeHumanLength;
-                            RouteHumanJamsTime = ScriptManager.routeHumanJamsTime;
-                            RouteHumanTime = ScriptManager.routeHumanTime;
+                            Route route = new Route();
+                            route.RouteId = Guid.NewGuid().ToString();
+                            route.RouteLength = scriptManager.routeLength;
+                            route.RouteJamsTime = scriptManager.routeJamsTime;
+                            route.RouteTime = scriptManager.routeTime;
+                            route.RouteHumanLength = scriptManager.routeHumanLength;
+                            route.RouteHumanJamsTime = scriptManager.routeHumanJamsTime;
+                            route.RouteHumanTime = scriptManager.routeHumanTime;
                             IsCheck = false;
-                            IsLoad = true;
-                            break;
+                            return route;
 
                         case ScriptManager.State.Error:
                             IsCheck = false;
                             break;
                     }
 
-                    // Выходим по TimeOut через 10 сек 
+                    // Выходим по TimeOut
                     TimeSpan ts = DateTime.Now - starTime;
                     if (ts.Seconds > requestTimeout)
                     {
                         IsCheck = false;
                     }
-
-                    Application.DoEvents();
-
                     Thread.Sleep(100);
-                }
+                    Application.DoEvents();
+                } 
 
                 webBrowser.Dispose(); 
                 GC.Collect();
@@ -143,21 +142,34 @@ namespace YandexAPI
                 GC.Collect();
             }
 
-            return IsLoad;
+            return null;
         }
 
         [STAThread()]
-        public bool Load(PointD DotA, PointD DotB)
+        public Route Load(PointD DotA, PointD DotB)
         {
             bool IsLoad = false;
-
-            ScriptManager.GetState = ScriptManager.State.Running;
 
             PointD[] RoutePoints = new PointD[] { DotA, DotB };
 
             return Load(RoutePoints);
         }
-      
+
+        /// <summary>
+        /// Id
+        /// </summary>
+        public string RouteId
+        {
+            get
+            {
+                return routeId;
+            }
+            set
+            {
+                routeId = value;
+            }
+        }
+
         /// <summary>
         /// Длина в метрах
         /// </summary>
@@ -251,21 +263,21 @@ namespace YandexAPI
         [ComVisible(true)]
         public class ScriptManager
         {
-            public static State GetState = State.Running;
+            public State GetState = State.Running;
 
             // Длина в метрах
-            public static string routeLength = "0";
+            public string routeLength = "0";
             // Время проезда в секундах с учетом пробок
-            public static string routeJamsTime = "0";
+            public string routeJamsTime = "0";
             // Время проезда в секундах
-            public static string routeTime = "0";
+            public string routeTime = "0";
 
             // Возвращает строковое представление длины маршрута с единицами измерения.
-            public static string routeHumanLength = "0";
+            public string routeHumanLength = "0";
             // Возвращает строковое представление времени проезда маршрута с единицами измерения с учетом пробок.
-            public static string routeHumanJamsTime = "0";
+            public string routeHumanJamsTime = "0";
             // Возвращает строковое представление времени проезда маршрута с единицами измерения.
-            public static string routeHumanTime = "0";
+            public string routeHumanTime = "0";
 
             public void GetData(object Length, object JamsTime, object CommonTime, 
                                 object HumanLength, object HumanJamsTime, object HumanTime)
